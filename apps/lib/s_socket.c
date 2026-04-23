@@ -214,10 +214,10 @@ int init_client(int *sock, const char *host, const char *port,
                 BIO_printf(bio_err, "Connecting to %s\n", hostname);
                 OPENSSL_free(hostname);
             }
-            /* Remove any stale errors from previous connection attempts */
-            ERR_clear_error();
-            ret = 1;
         }
+        /* Remove any stale errors from previous connection attempts */
+        ERR_clear_error();
+        ret = 1;
     }
 out:
     if (bindaddr != NULL) {
