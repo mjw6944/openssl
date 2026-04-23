@@ -206,16 +206,18 @@ int init_client(int *sock, const char *host, const char *port,
         }
         ERR_print_errors(bio_err);
     } else {
-        char *hostname = NULL;
+        if (!quiet) {
+            char *hostname = NULL;
 
-        hostname = BIO_ADDR_hostname_string(BIO_ADDRINFO_address(ai), 1);
-        if (hostname != NULL && !quiet) {
-            BIO_printf(bio_err, "Connecting to %s\n", hostname);
-            OPENSSL_free(hostname);
+            hostname = BIO_ADDR_hostname_string(BIO_ADDRINFO_address(ai), 1);
+            if (hostname != NULL) {
+                BIO_printf(bio_err, "Connecting to %s\n", hostname);
+                OPENSSL_free(hostname);
+            }
+            /* Remove any stale errors from previous connection attempts */
+            ERR_clear_error();
+            ret = 1;
         }
-        /* Remove any stale errors from previous connection attempts */
-        ERR_clear_error();
-        ret = 1;
     }
 out:
     if (bindaddr != NULL) {
